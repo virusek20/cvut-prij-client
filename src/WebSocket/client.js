@@ -6,12 +6,14 @@ import AdminConnection from "./AdminConnection.js";
 import SageConnection from "./SageConnection.js";
 import ExamConnection from "./ExamConnection.js";
 import { preventClose } from "../stores.js";
+import { logout } from "../REST/auth";
 
 // This does create useless modules but there isn't any performance downside, there's still only one socket
 export let ws;
 
 let timeout;
 let retries = 0;
+let close = false;
 
 export const chat = new ChatConnection();
 export const webrtc = new WebRtcConnection();
@@ -20,6 +22,7 @@ export const sage = new SageConnection();
 export const exam = new ExamConnection();
 
 export function connect(token) {
+    if (close === true) return;
     console.log("Attempting to connect, try " + retries);
     retries++
 
@@ -42,6 +45,7 @@ export function connect(token) {
             resolve();
         };
 
+        ws.onerror = (e) => console.error(e);
         ws.onclose = () => {
             timeout = setTimeout(() => connect(token), 1000)
         };
@@ -50,10 +54,10 @@ export function connect(token) {
 
 export function disconnect() {
     clearTimeout(timeout);
-    ws.close();
+    close = true;
 
+    ws.close();
     preventClose.set(false);
-    document.location.href = "/";
 }
 
 function onMessage(event) {
@@ -63,8 +67,13 @@ function onMessage(event) {
         case "pageChange":
             navigate(data.state);
             break;
+        case "logout":
+            logout();
+            disconnect();
+            break;
         case "disconnect":
             disconnect();
+            document.location.href = "/";
             break;
     }
 }

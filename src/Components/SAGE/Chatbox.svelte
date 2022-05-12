@@ -7,7 +7,8 @@
     export let room, canClose, canPop, remoteName;
     let chatState = chat.getChat(room);
     chatState.subscribe(state => {
-        dispatch("message")
+        // Send notification + last message
+        dispatch("message", state.messages.at(-1));
     });
 
     import { onMount } from "svelte";
@@ -64,7 +65,7 @@
         {/if}
     </div>
 
-    <div class="p-1 flex-grow-1 overflow-scroll">
+    <div class="p-1 flex-grow-1 overflow-y-scroll">
         {#each $chatState.messages as message (message.id)}
             <div>
                 <span>[{new Date(message.timestamp).toLocaleTimeString()}]</span>
@@ -81,3 +82,10 @@
           </div>
     </div>
 </div>
+
+<style>
+    .overflow-y-scroll {
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+</style>

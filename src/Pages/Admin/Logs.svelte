@@ -34,7 +34,7 @@
     $: {
         filteredLogs = $logs.filter(l => 
             // Check without accents and other non-standard characters
-            l.text.localeContains(searchExpression)
+            l.text.toString().localeContains(searchExpression)
         );
     }
 

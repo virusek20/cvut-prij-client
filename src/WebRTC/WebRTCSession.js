@@ -90,4 +90,9 @@ export default class WebRTCSession {
         if (this.rtcConnection.remoteDescription) await this.rtcConnection.addIceCandidate(info);
         else this.candidates.push(info);
     }
+
+    setTrackState(state) {
+        this.remoteStream.getTracks().forEach(t => t.enabled = state);
+        this.localStream.getTracks().forEach(t => t.enabled = state);
+    }
 }

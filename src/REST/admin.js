@@ -14,13 +14,13 @@ export async function getUsers() {
 }
 
 export async function removeUser(user) {
-    const data = JSON.stringify(user);
     const response = await fetch(`${restEndPoint}/user`, {
         method: "DELETE",
         cache: 'no-cache',
-        body: data,
+        body: JSON.stringify({ user }),
         headers: {
-            'Authorization': getToken()
+            'Authorization': getToken(),
+            'Content-Type': 'application/json'
         }
     });
 
@@ -28,17 +28,73 @@ export async function removeUser(user) {
 }
 
 export async function addUser(user) {
-    const data = JSON.stringify(user);
     const response = await fetch(`${restEndPoint}/user`, {
         method: "POST",
         cache: 'no-cache',
-        body: data,
+        body: JSON.stringify({ user }),
         headers: {
-            'Authorization': getToken()
+            'Authorization': getToken(),
+            'Content-Type': 'application/json'
         }
     });
     
     return await response.json();
+}
+
+export async function enableUser(id) {
+    const response = await fetch(`${restEndPoint}/user/enable`, {
+        method: "POST",
+        cache: 'no-cache',
+        body: JSON.stringify({ id }),
+        headers: {
+            'Authorization': getToken(),
+            'Content-Type': 'application/json'
+        }
+    });
+    
+    return response.ok;
+}
+
+export async function disableUser(id) {
+    const response = await fetch(`${restEndPoint}/user/disable`, {
+        method: "POST",
+        cache: 'no-cache',
+        body: JSON.stringify({ id }),
+        headers: {
+            'Authorization': getToken(),
+            'Content-Type': 'application/json'
+        }
+    });
+    
+    return response.ok;
+}
+
+export async function enableGroup(group) {
+    const response = await fetch(`${restEndPoint}/group/enable`, {
+        method: "POST",
+        cache: 'no-cache',
+        body: JSON.stringify({ group }),
+        headers: {
+            'Authorization': getToken(),
+            'Content-Type': 'application/json'
+        }
+    });
+    
+    return response.ok;
+}
+
+export async function disableGroup(group) {
+    const response = await fetch(`${restEndPoint}/group/disable`, {
+        method: "POST",
+        cache: 'no-cache',
+        body: JSON.stringify({ group }),
+        headers: {
+            'Authorization': getToken(),
+            'Content-Type': 'application/json'
+        }
+    });
+    
+    return response.ok;
 }
 
 export async function uploadUserFile(file) {

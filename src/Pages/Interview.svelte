@@ -40,13 +40,13 @@
 
 <div class="row">
     <div class="col-6 d-flex flex-column align-items-center justify-content-center">
-        <div class="w-75 mb-2">
+        <div class="w-50 mb-2 d-flex flex-column align-items-center justify-content-center">
             <!-- svelte-ignore a11y-media-has-caption -->
-            <video class="mw-100" bind:this={selfVideo} autoplay muted></video> 
+            <video class="mw-100 mh-100" bind:this={selfVideo} autoplay muted></video> 
         </div>
-        <div class="w-100 mb-2">
+        <div class="w-100 mb-2 d-flex flex-column align-items-center justify-content-center">
             <!-- svelte-ignore a11y-media-has-caption -->
-            <video class="mw-100" bind:this={remoteVideo} autoplay></video> 
+            <video class="mw-100 mh-100" bind:this={remoteVideo} autoplay></video> 
         </div>
         <div>
             <button on:click="{stop}" data-bs-toggle="tooltip" data-bs-placement="top" title="Disconnects the applicant and shows a message saying that the exam is completed" class="btn btn-danger">Disconnect applicant</button>
@@ -69,6 +69,3 @@
         <ApplicantList/>
     </div>
 </div>
-
-<style>
-</style>

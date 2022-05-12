@@ -36,6 +36,7 @@ export default class SageConnection {
 
                 const a = this.getApplicant(data.username);
                 a.markedInterview = data.state.markedInterview;
+                a.interviewRoom = data.state.interviewRoom;
                 a.requestTalk = data.state.requestTalk;
                 a.seenState = data.state.seenState;
                 a.lastSeen = data.state.lastSeen;
@@ -45,7 +46,7 @@ export default class SageConnection {
                 this.registeredApplicants.set(this.applicants);
                 break;
             case "fullSageState":
-                this.applicants = data.applicants.filter(a => a.active === "true");
+                this.applicants = data.applicants.filter(a => a.active === true);
                 this.registeredApplicants.set(this.applicants);
                 break;
         }

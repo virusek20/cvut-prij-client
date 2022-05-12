@@ -31,6 +31,10 @@
 
         interviewRoom.subscribe(async v => {
             if (v === "") { // Going back to sage
+                session.setTrackState(true);
+                sageSession.setTrackState(true);
+                interviewSession?.setTrackState(false);
+
                 selfVideo.srcObject = session.localStream;
                 remoteVideo.srcObject = sageSession.remoteStream;
 
@@ -38,6 +42,10 @@
                 remoteVideo.srcObject.muted = false;
             }
             else { // Going to interview
+                session.setTrackState(false);
+                sageSession.setTrackState(false);
+                interviewSession?.setTrackState(true);
+
                 if (interviewSession !== undefined) interviewSession.rtcConnection.close();
 
                 interviewSession = new WebRTCSession(ws, v);
@@ -45,7 +53,6 @@
 
                 selfVideo.srcObject = interviewSession.localStream;
                 remoteVideo.srcObject = interviewSession.remoteStream;
-
                 remoteVideo.srcObject.muted = false;
 
                 await interviewSession.createOffer(true);
@@ -64,13 +71,14 @@
             The committee is currently talking to a different applicant. Your audio is muted on purpose for privacy reasons.
         </div>
         {/if}
-        <div class="w-75 mb-2">
+        <div class="position-relative w-100 mb-2 d-flex flex-column align-items-center justify-content-center">
+            <div class="w-25 position-absolute bottom-0 end-0 d-flex flex-column align-items-center justify-content-center">
+                <!-- svelte-ignore a11y-media-has-caption -->
+                <video class="mw-100 mh-100" bind:this={selfVideo} autoplay muted></video> 
+            </div>
+
             <!-- svelte-ignore a11y-media-has-caption -->
-            <video class="mw-100" bind:this={selfVideo} autoplay muted></video> 
-        </div>
-        <div class="w-100 mb-2">
-            <!-- svelte-ignore a11y-media-has-caption -->
-            <video class="mw-100" bind:this={remoteVideo} autoplay></video> 
+            <video poster="/img/placeholder.png" class="mw-100 mh-100" bind:this={remoteVideo} autoplay></video> 
         </div>
         <div>
             <button on:click="{() => exam.requestTalk()}" class="btn btn-primary">Request to talk</button>

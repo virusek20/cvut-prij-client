@@ -3,7 +3,7 @@
     import WebRTCSession from "../../WebRTC/WebRTCSession.js";
     import { ws, sage } from "../../WebSocket/client.js";
 
-    import { onMount } from "svelte";
+    import { onMount, afterUpdate } from "svelte";
     export let name, surname, token, username, seenState, requestTalk, chat, country, studyPlan, lastSeen, markedInterview, interviewRoom;
 
     const states = {
@@ -29,6 +29,14 @@
         isMounted = true;
     });
 
+    afterUpdate(() => {
+        tooltips.forEach(t => t.hide());
+        let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltips = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    })
+
     function talk() {
         video.muted = false;
         sage.talk(token);
@@ -43,22 +51,19 @@
         requestTalk = false;
     }
 
+    function chatMessage(msg) {
+        if (msg.isRemote === true) chat = true;
+    }
+
     $: stateInfo = states[seenState.name] ?? states["default"];
     $: canControl = seenState.name == "connected" || seenState.name == "seen";
 
-    $: {
-        if (isMounted) {
-            let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
-        }
-    }
 
     let isTalking;
     let video;
     let session;
     let isMounted = false;
+    let tooltips = [];
 
     $: lastSeenTime = lastSeen === null ? "Never" : new Date(lastSeen).toLocaleTimeString();
     let chatOpen = false;
@@ -66,7 +71,7 @@
 
 <div class="position-relative webrtc-frame d-flex align-items-start flex-column p-1" style="--text-color:{stateInfo.color}">
     <div class:d-none={!chatOpen} class="position-absolute start-0 end-0 top-0 bottom-0" style="z-index: 3;">
-        <ChatBox on:message="{() => chat = true}" on:close="{() => chatOpen = false}" room="{username}" canClose="{true}" canPop="{false}" remoteName="{name} {surname}" />
+        <ChatBox on:message="{chatMessage}" on:close="{() => chatOpen = false}" room="{username}" canClose="{true}" canPop="{false}" remoteName="{name} {surname}" />
     </div>
     
 
@@ -107,7 +112,7 @@
         {/if}
 
         {#if markedInterview}
-            <span class="float-end text-warning fs-4" data-bs-toggle="tooltip" data-bs-placement="top" title="Marked for interview">
+            <span class="interview float-end text-warning fs-4" data-bs-toggle="tooltip" data-bs-placement="top" title="Marked for interview">
                 <i class="fas ms-1 me-1 fa-comment fa-person-chalkboard"></i>
             </span>
         {/if}
@@ -167,6 +172,10 @@
         
         -webkit-box-decoration-break: clone;
         box-decoration-break: clone;
+    }
+
+    .interview {
+        font-size: 1vw;
     }
 
     .mouseover {

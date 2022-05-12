@@ -3,7 +3,7 @@
     import { sage } from "../../WebSocket/client.js";
 
     function canInvite(applicant) {
-        return applicant.seenState.name === "connected" ||  applicant.seenState.name === "seen";
+        return applicant.seenState.name === "connected" || applicant.seenState.name === "seen";
     }
 
     function invite(applicant) {
@@ -14,7 +14,7 @@
 </script>
 
 <div class="card mb-2">
-    <div class="card-header">Applicant list</div>
+    <div class="card-header">Available applicant list</div>
     <div class="card-body h-100" style="max-height: 600px">
         <ul class="list-group">
             {#each $registeredApplicants as applicant (applicant.username)}

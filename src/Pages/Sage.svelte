@@ -19,12 +19,12 @@
 </script>
 
 <div class="sage-container">
-    {#each $registeredApplicants as applicant (applicant.name)}
+    {#each $registeredApplicants as applicant (applicant.username)}
 		<StudentFrame {...applicant}/>
 	{/each}
 
-    <div class="local-video">
-        <video class="mw-100" bind:this={selfVideo} autoplay muted></video>
+    <div class="local-video d-flex justify-content-center">
+        <video class="mw-100 mh-100" bind:this={selfVideo} autoplay muted></video>
     </div>
     <div class="global-chat">
         <ChatBox room="all" canPop="{false}" canClose = "{false}" remoteName=""/>
@@ -39,6 +39,8 @@
 
         background-color: black;
         color: white;
+
+        overflow: hidden;
 
         position: absolute;
         left: 0;
